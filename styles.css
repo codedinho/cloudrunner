@@ -249,16 +249,15 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 100;
 }
 
 /* Style the ability icons within the power boxes */
 .ability-icon img {
     max-width: 75%; /* Ensure the image fits within the power box */
     max-height: 75%; /* Ensure the image fits within the power box */
-    /* Add other styling properties as needed */
+    z-index: 100;
 }
-
-
 
 .start-game-box{
     display: none;
@@ -311,8 +310,8 @@ body {
 .random-ability {
     /* Add styles for the power raindrop here */
     background-image: url('./assets/icons/random-ability.png'); /* Set the background image for power raindrops */
-    width: 75px;
-    height: 75px;
+    width: 55px;
+    height: 55px;
 }
 
 .trap-power {

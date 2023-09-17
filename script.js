@@ -23,6 +23,24 @@ let isGameOver = false; // Flag to track game over state
 let isInvincible = false;
 let isDoggyLife = false;
 
+// Add event listeners for all power boxes when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    const powerBoxes = document.querySelectorAll('.power-box');
+    powerBoxes.forEach(box => {
+        box.addEventListener('click', () => {
+            const abilityClass = box.classList[1]; // Get the ability class from the button
+            if (abilityClass) {
+                // Trigger the ability
+                executeAbilityByClass(abilityClass);
+                
+                // Remove the ability from the button
+                box.classList.remove(abilityClass);
+                box.innerHTML = ''; // Remove any child elements
+            }
+        });
+    });
+});
+
 // Add these variables at the beginning of your script to track the clicked ability icons.
 let clickedAbilities = {
     freeze: false,
@@ -30,21 +48,6 @@ let clickedAbilities = {
     umbrella: false,
     'doggy-life': false,
 };
-
-// Add click event listeners to the ability icons
-const abilityIcons = document.querySelectorAll('.ability-icon');
-
-abilityIcons.forEach(icon => {
-    icon.addEventListener('click', () => {
-        console.log('Ability icon clicked'); // Add this line for debugging
-        const abilityClass = icon.classList[1];
-        if (!clickedAbilities[abilityClass]) {
-            clickedAbilities[abilityClass] = true;
-            executeAbilityByClass(abilityClass);
-            icon.remove();
-        }
-    });
-});
 
 // Function to start the game
 function startGame() {
@@ -162,7 +165,6 @@ function executeDoggyLifeAbility() {
 
 function revertDoggyLifeAbility() {
     isDoggyLife = false;
-    console.log('Doggy Life ability reverted');
     // Update heart icons
     updateHearts();
 }
@@ -227,6 +229,14 @@ function resetGame() {
     // Reset the health bar width to its initial state
     const healthPercentage = (currentHealth / maxHealth) * 100;
     healthBar.style.width = `${healthPercentage}%`;
+
+    // Reset clickedAbilities object
+    clickedAbilities = {
+        freeze: false,
+        sunny: false,
+        umbrella: false,
+        'doggy-life': false,
+    };
 
     // Clear the power boxes of all icons
     clearPowerBoxes();
@@ -336,8 +346,13 @@ function clearPowerBoxes() {
     powerBoxes.forEach(box => {
         box.innerHTML = ''; // Remove all child elements (icons)
         box.classList.remove('ability-icon'); // Remove the ability-icon class
+
+        // Remove the click event listener
+        const clonedBox = box.cloneNode(true);
+        box.parentNode.replaceChild(clonedBox, box);
     });
 }
+
 // Function to execute the Freeze ability
 function executeFreezeAbility() {
     console.log('Freeze ability triggered');
@@ -372,7 +387,7 @@ function executeUmbrellaAbility() {
     }, 8000);
 }
 
-
+// Function to execute abilities based on their class
 function executeAbilityByClass(abilityClass) {
     if (abilityClass === 'freeze') {
         executeFreezeAbility();
@@ -418,26 +433,17 @@ function handleRaindropCollision(raindrop) {
         updatePlayerState('angry');
         revertDoggyLifeAbility();
     } else if (raindrop.classList.contains('random-ability')) {
+        updatePlayerState('happy');
         // Get a random ability class
         const abilityClass = getRandomAbility();
+
+        setTimeout(() => {
+            updatePlayerState('neutral');
+        }, 2000);
 
         // Find the leftmost empty power box
         const powerBoxes = document.querySelectorAll('.power-box');
         const emptyBox = Array.from(powerBoxes).find(box => !box.classList.contains('ability-icon'));
-
-        powerBoxes.forEach(box => {
-            box.addEventListener('click', () => {
-                const abilityClass = box.classList[1]; // Get the ability class from the button
-                if (abilityClass) {
-                    // Trigger the ability
-                    executeAbilityByClass(abilityClass);
-                    
-                    // Remove the ability from the button
-                    box.classList.remove(abilityClass);
-                    box.innerHTML = ''; // Remove any child elements
-                }
-            });
-        });
 
         if (emptyBox) {
             // Create an image element for the ability icon
@@ -448,9 +454,21 @@ function handleRaindropCollision(raindrop) {
             // Append the icon to the empty power box
             emptyBox.appendChild(icon);
             emptyBox.classList.add('ability-icon', abilityClass);
-        }
 
-        updatePlayerState('happy');
+            powerBoxes.forEach(box => {
+                box.addEventListener('click', () => {
+                    const abilityClass = box.classList[1]; // Get the ability class from the button
+                    if (abilityClass) {
+                        // Trigger the ability
+                        executeAbilityByClass(abilityClass);
+                        
+                        // Remove the ability from the button
+                        box.classList.remove(abilityClass);
+                        box.innerHTML = ''; // Remove any child elements
+                    }
+                });
+            });
+        }
         raindrop.remove();
     } else if (!isSad) {
         isSad = true;
@@ -463,23 +481,8 @@ function handleRaindropCollision(raindrop) {
         setTimeout(() => {
             isSad = false;
             updatePlayerState('neutral');
-        }, 2000);    
-    } else if (raindrop.classList.contains('freeze')) {
-        // Execute the Freeze ability
-        executeFreezeAbility();
-        raindrop.remove();
-    } else if (raindrop.classList.contains('sunny')) {
-        // Execute the Wipe ability
-        executeSunnyAbility();
-        raindrop.remove();
-    } else if (raindrop.classList.contains('umbrella')) {
-        executeUmbrellaAbility();
-        raindrop.remove();
-    } else if (raindrop.classList.contains('doggy-life')) {
-        // Execute the Slow Motion ability
-        executeDoggyLifeAbility();
-        raindrop.remove();
-    }
+        }, 2000);   
+    } 
 }
 
 // Call updateHearts to initialize the hearts display
@@ -558,30 +561,39 @@ movePlayer();
 // Initial player position update
 updatePlayerPosition();
 
+let specialItemsEnabled = false; // Initialize to false
+
+// Initial player position update
+updatePlayerPosition();
+
 function createRaindrop() {
     if (isRainFalling) {
         const raindrop = document.createElement('div');
         raindrop.classList.add('raindrop');
         gameContainer.appendChild(raindrop);
 
-        // Randomly decide if it's a raindrop or a power.png
+        // Randomly decide if it's a raindrop or a special item
         const isPower = Math.random() < 0.1; // 10% chance for power.png
         const isHealth = Math.random() < 0.0025; // 10% chance for power.png
         const isAcidRain = Math.random() < 0.02; // 10% chance for power.png
-        const isRandomAbility = Math.random() < 0.01; // 10% chance for power.png
+        const isRandomAbility = Math.random() < 0.5; // 10% chance for power.png
         const isTrapPower = Math.random() < 0.02; // 10% chance for power.png
 
-
-        if (isPower) {
-            raindrop.classList.add('power-raindrop');
-        } else if (isHealth) {
-            raindrop.classList.add('heart');
-        } else if (isAcidRain) {
-            raindrop.classList.add('acid-rain');
-        } else if (isRandomAbility) {
-            raindrop.classList.add('random-ability');
-        } else if (isTrapPower) {
-            raindrop.classList.add('trap-power');
+        if (specialItemsEnabled) {
+            if (isPower) {
+                raindrop.classList.add('power-raindrop');
+            } else if (isHealth) {
+                raindrop.classList.add('heart');
+            } else if (isAcidRain) {
+                raindrop.classList.add('acid-rain');
+            } else if (isRandomAbility) {
+                raindrop.classList.add('random-ability');
+            } else if (isTrapPower) {
+                raindrop.classList.add('trap-power');
+            }
+        } else {
+            // Only regular raindrops for the first 5 seconds
+            raindrop.classList.add('raindrop');
         }
 
         // Randomly position the raindrop along the X-axis
@@ -602,6 +614,10 @@ function createRaindrop() {
     }
 }
 
+// Start regular raindrops falling for the first 5 seconds
+setTimeout(() => {
+    specialItemsEnabled = true; // Enable special items after 5 seconds
+}, 5000);
 
 // Call createRaindrop at regular intervals to simulate rainfall with the updated interval
 setInterval(createRaindrop, raindropInterval);
