@@ -16,7 +16,6 @@ const abilities = ['freeze', 'sunny', 'umbrella', 'doggy-life'];
 
 let playerLives = 3; // Initial lives
 let isGameStarted = false; // Flag to track game status
-let currentLevel = 1; // Initial level
 let raindropInterval = 135; // Initial raindrop interval in milliseconds
 let isRainFalling = false;
 let isGameOver = false; // Flag to track game over state
@@ -56,28 +55,6 @@ function startGame() {
     // Hide the start game box
     startGameBox.style.display = 'none';
     // Add your game initialization logic here
-
-    // Start increasing the level every 25 seconds
-    levelIncreaseInterval = setInterval(increaseLevel, 20000); // 20 seconds in milliseconds
-}
-
-function increaseLevel() {
-    currentLevel++;
-    // Decrease the raindrop interval slightly (adjust this value as needed)
-    if (raindropInterval > 25) {
-        raindropInterval -= 15; // Decrease the raindrop interval by 15 milliseconds
-    }
-    updateLevelDisplay();
-
-    // Add a console.log statement to check if the function is called
-    console.log('Level increased to', currentLevel);
-}
-
-
-// Function to display the current level
-function updateLevelDisplay() {
-    const levelDisplay = document.querySelector('.level-display');
-    levelDisplay.textContent = `Level: ${currentLevel}`;
 }
 
 // Event listener for the "Start Game" button
@@ -188,13 +165,9 @@ function getRandomAbility() {
     return abilities[randomIndex];
 }
 
-
-
 // Function to show the game over screen
 function showGameOverScreen() {
     gameOverBox.style.display = 'block';
-    // Clear the level increase interval when the game is over
-    clearInterval(levelIncreaseInterval);
 }
 
 // Function to hide the game over screen
@@ -210,8 +183,6 @@ function resetPlayerPosition() {
 function resetGame() {
     playerLives = 3; // Reset player lives
     updateHearts(); // Update heart icons
-    currentLevel = 1; // Reset level
-    updateLevelDisplay(); // Update level display
     isGameOver = false;
 
     revertDoggyLifeAbility();
@@ -575,8 +546,8 @@ function createRaindrop() {
         // Randomly decide if it's a raindrop or a special item
         const isPower = Math.random() < 0.1; // 10% chance for power.png
         const isHealth = Math.random() < 0.0025; // 10% chance for power.png
-        const isAcidRain = Math.random() < 0.02; // 10% chance for power.png
-        const isRandomAbility = Math.random() < 0.5; // 10% chance for power.png
+        const isAcidRain = Math.random() < 0.05; // 10% chance for power.png
+        const isRandomAbility = Math.random() < 0.05; // 10% chance for power.png
         const isTrapPower = Math.random() < 0.02; // 10% chance for power.png
 
         if (specialItemsEnabled) {
