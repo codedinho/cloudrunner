@@ -1,0 +1,321 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #3a3a3a;
+}
+
+.start-game-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px solid #333;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+
+.start-game-box h2 {
+    font-size: 24px;
+}
+
+.start-game-box p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.start-game-box button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.game-container {
+    position: fixed;
+    width: 100%;
+    max-width: 480px;
+    height: 500px;
+    background-image: url('./assets/background/background.png'); /* Set the background image */
+    background-size: cover; /* Adjust the background image size to cover the container */
+    border: 1px solid #000;
+    overflow: hidden;
+    
+}
+
+.health-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px; /* Adjust the height as needed */
+    background-color: #ff0000; /* Red background color */
+    z-index: 9999; /* Ensure it's above other elements */
+}
+
+.health-fill {
+    height: 100%;
+    width: 100%;
+    background-color: #00ff00; /* Green fill color */
+    transition: width 1s linear; /* Smooth transition for the fill */
+}
+
+.player {
+    position: absolute;
+    width: 40px; /* Adjust the width as needed */
+    height: 40px; /* Adjust the height accordingly */
+    background-image: url('./assets/icons/character-neutral.png'); /* Set the background image */
+    background-size: cover; /* Adjust the image size to fit the player dimensions */
+    border: 1px solid #000; /* Add any other necessary styles */
+    border-radius: 50%;
+    bottom: 10px; /* Position the player at the bottom of the container */
+    left: 50%; /* Start at the center */
+    transform: translateX(-50%); /* Center horizontally */
+    border: none;
+    margin-left: 20px;
+}
+
+
+/* Regular raindrop style */
+.raindrop {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-image: url('./assets/icons/drop.png');
+    background-size: cover;
+    animation: fall 2s linear infinite;
+    animation-duration: 2s; /* Set the initial animation duration */
+}
+
+
+
+@keyframes fall {
+    0% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(500px);
+        opacity: 1;
+    }
+}
+
+.neutral {
+    background-image: url('./assets/icons/character-neutral.png');
+    /* Set the dimensions of the character icon */
+    width: 40px;
+    height: 40px;
+    /* Add any other necessary styles */
+}
+
+.happy {
+    background-image: url('./assets/icons/character-happy.png');
+    width: 40px;
+    height: 40px;
+}
+
+.sad {
+    background-image: url('./assets/icons/character-sad.png');
+    width: 40px;
+    height: 40px;
+}
+
+.angry {
+    background-image: url('./assets/icons/character-angry.png');
+    width: 40px;
+    height: 40px;
+}
+
+.worried {
+    background-image: url('./assets/icons/character-worried.png');
+    width: 40px;
+    height: 40px;
+}
+
+.love {
+    background-image: url('./assets/icons/character-love.png');
+    width: 40px;
+    height: 40px;
+}
+
+.protected {
+    background-image: url('./assets/icons/character-umbrella.png');
+    width: 40px;
+    height: 40px;
+}
+
+/* Style the hearts container */
+.hearts-container {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+/* Style the hearts container */
+.level-display {
+    position: absolute;
+    font-family: 'Staatliches', cursive;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+/* Style individual heart icons */
+.heart {
+    width: 30px; /* Adjust the width as needed */
+    height: 30px; /* Adjust the height as needed */
+    margin-right: 5px; /* Adjust the margin between hearts as needed */
+}
+
+/* Hide the game over box initially */
+.game-over-box {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8); /* Add a semi-transparent background */
+    padding: 20px;
+    text-align: center;
+    color: white;
+    border-radius: 10px;
+    width: 250px;
+    font-family: 'Staatliches', cursive;
+    font-size: 25px;
+}
+
+#play-again-button{
+    margin-top: 10px;
+    background-color: #218d01;
+    border-radius: 10px;
+    font-weight: 900;
+    color: #fff;
+    padding: 15px;
+    font-size: 20px;
+    border: none;
+}
+
+#play-again-button:hover{
+    background-color: #28aa01;
+}
+
+
+/* Style the parent container */
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+/* Style the parent container */
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+/* Style the box container */
+.power-container {
+    position: fixed;
+    left: 50%;
+    margin-top: 260px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-wrap: wrap; /* Allow the boxes to wrap to the next line */
+    max-width: 480px;
+    width: 95%; /* Adjust the width as needed to match the main container */
+    justify-content: space-between; /* Distribute space between boxes */
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+}
+
+/* Style the power boxes */
+.power-box {
+    width: calc(20% - 10px);
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    /* Add other styling properties as needed */
+
+    /* Center the content vertically and horizontally */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Style the ability icons within the power boxes */
+.ability-icon img {
+    max-width: 75%; /* Ensure the image fits within the power box */
+    max-height: 75%; /* Ensure the image fits within the power box */
+    /* Add other styling properties as needed */
+}
+
+
+
+.start-game-box{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8); /* Add a semi-transparent background */
+    padding: 20px;
+    text-align: center;
+    color: white;
+    border-radius: 10px;
+    /* Add other styling properties as needed */
+    width: 250px;
+    font-family: 'Staatliches', cursive;
+    font-size: 25px;
+}
+
+#start-button{
+    margin-top: 20px;
+    background-color: #218d01;
+    border-radius: 10px;
+    font-weight: 900;
+    font-size: 20px;
+    padding: 15px;
+
+}
+
+#start-button:hover{
+    background-color: #28aa01;
+}
+
+.power-raindrop {
+    /* Add styles for the power raindrop here */
+    background-image: url('./assets/icons/power.png'); /* Set the background image for power raindrops */
+}
+
+.heart {
+    /* Add styles for the power raindrop here */
+    background-image: url('./assets/icons/heart-full.png'); /* Set the background image for power raindrops */
+}
+
+.acid-rain {
+    /* Add styles for the power raindrop here */
+    background-image: url('./assets/icons/acid-rain.png'); /* Set the background image for power raindrops */
+    width: 75px;
+    height: 75px;
+}
+
+.random-ability {
+    /* Add styles for the power raindrop here */
+    background-image: url('./assets/icons/random-ability.png'); /* Set the background image for power raindrops */
+    width: 75px;
+    height: 75px;
+}
+
+.trap-power {
+    /* Add styles for the power raindrop here */
+    background-image: url('./assets/icons/trap-power.png'); /* Set the background image for power raindrops */
+}
