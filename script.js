@@ -13,14 +13,21 @@ const playAgainButton = document.getElementById('play-again-button');
 
 const abilities = ['freeze', 'sunny', 'umbrella', 'doggy-life'];
 
-
+let wavesData = [];
 let playerLives = 3; // Initial lives
 let isGameStarted = false; // Flag to track game status
-let raindropInterval = 135; // Initial raindrop interval in milliseconds
 let isRainFalling = false;
 let isGameOver = false; // Flag to track game over state
 let isInvincible = false;
 let isDoggyLife = false;
+let currentWave = 1; // Initialize the current wave to 1
+let waveData; // Store the current wave's data
+let roundTimer; // Timer for each round
+let roundDuration = 5000; // 20 seconds per round
+let specialItemsEnabled = false; // Initialize to false
+let raindropIntervalId;
+let raindropInterval = 500;
+
 
 // Add event listeners for all power boxes when the page loads
 document.addEventListener('DOMContentLoaded', () => {
@@ -48,13 +55,49 @@ let clickedAbilities = {
     'doggy-life': false,
 };
 
-// Function to start the game
-function startGame() {
-    isGameStarted = true; // Flag to track game status
-    isRainFalling = true;
-    // Hide the start game box
-    startGameBox.style.display = 'none';
-    // Add your game initialization logic here
+function startGameWithWave(currentWave) {
+    currentWave = 1; // Update the current wave to 1
+    updateWaveData(currentWave); // Update the wave data
+
+    console.log('Starting game with wave:', currentWave);
+    console.log('currentWave:', currentWave);
+    console.log('wavesData length:', wavesData.length);
+
+    // Reset any game-specific variables and elements as needed for the new wave
+
+    // Start regular raindrops falling for the first 5 seconds
+    setTimeout(() => {
+        specialItemsEnabled = true; // Enable special items after 5 seconds
+    }, 5000);
+
+    raindropInterval = 500;
+
+    // Clear any existing intervals to prevent multiple intervals from running simultaneously
+    clearInterval(raindropIntervalId);
+
+    // Call createRaindrop at regular intervals to simulate rainfall with the updated interval
+    raindropIntervalId = setInterval(createRaindrop, raindropInterval);
+    
+    console.log(raindropInterval)
+}
+
+
+function advanceToNextWave() {
+    if (!isGameOver) {
+    const nextWaveNumber = currentWave + 1;
+    if (nextWaveNumber <= wavesData.length) {
+        // Pause raindrops, display start wave message
+        isRainFalling = false;
+        setTimeout(() => {
+            // Resume raindrops after the break
+            startRound();
+            console.log(raindropInterval)
+
+        }, 5000); // Wait for 5 seconds before starting the 20-second wave
+    } else {
+        // All waves completed, handle game completion logic
+    }
+  }
 }
 
 // Event listener for the "Start Game" button
@@ -62,6 +105,107 @@ startButton.addEventListener('click', startGame);
 
 // Show the start game box initially
 startGameBox.style.display = 'block';
+
+async function startGame() {
+    // Reset the wave data to wave 1
+    console.log("Start Game button clicked.");
+    resetGame();
+    resetWaveData();
+    specialItemsEnabled = false;
+    isGameOver = false;
+    isGameStarted = true; // Flag to track game status
+    isRainFalling = false; // Stop raindrops
+
+    // Hide the start game box
+    startGameBox.style.display = 'none';
+
+    // Load wave data and start the game with the first wave
+    try {
+        await loadWaveData(); // Wait for wave data to load
+        startRound(); // Start the first round
+    } catch (error) {
+        console.error(error);
+        // Handle any errors that occur during wave data loading
+    }
+}
+
+
+// Inside your script, add the following function to display the wave message:
+function displayWaveMessage(message) {
+    if (isGameStarted) {
+        const waveMessageElement = document.querySelector('.wave-message');
+        waveMessageElement.textContent = message;
+        waveMessageElement.style.display = 'block';
+
+        // Hide the message after a delay (e.g., 3 seconds)
+        setTimeout(() => {
+            waveMessageElement.style.display = 'none';
+            startRain(); // Start the rain after hiding the message
+        }, 5000); // Display the message for 5 seconds
+    }
+}
+
+function startRound() {
+    if (isGameStarted) {
+    console.log("Entering startRound. Current wave:", currentWave, "Total waves:", wavesData.length);
+    // Inside your startRound function, clear the existing interval:
+    if (currentWave <= wavesData.length) {
+        console.log("Starting round, setting isRainFalling to false");
+
+        isRainFalling = false; // Stop raindrops initially in each round
+        // Set up the round
+        updateWaveData(currentWave);
+        displayWaveMessage(`Wave ${currentWave}`); // Display the wave message for 5 seconds
+
+        // Clear the previous round timer (if any)
+        if (roundTimer) {
+            clearTimeout(roundTimer);
+        }
+
+        // Update the raindropInterval based on the current wave's data
+        raindropInterval = waveData.raindropInterval;
+
+        roundTimer = setTimeout(() => {
+            console.log("Round timer expired. Enabling rain after 5 seconds");
+
+            // Round timer expired; progress to the next round or restart
+            currentWave++;
+            if (currentWave <= wavesData.length) {
+                // Re-enable raindrops and move to the next round (20-second wave)
+                advanceToNextWave(); // Call the function to advance to the next wave
+                raindropInterval = waveData.raindropInterval;
+            } else {
+                // All waves completed, handle game completion logic
+                handleGameCompletion();
+            }
+        }, roundDuration + 5000); // Add 5000 milliseconds (5 seconds) to roundDuration
+    } else {
+        console.log("Invalid currentWave:", currentWave, "wavesData length:", wavesData.length);
+    }
+  }
+}
+
+
+// Add a function to start the rain:
+function startRain() {
+    if (isGameStarted) {
+        isRainFalling = true; // Start raindrops
+        // Inside your startRain function:
+        raindropIntervalId = setInterval(() => {
+            if (isRainFalling) {
+                createRaindrop(); // Create a raindrop
+            }
+        }, raindropInterval);
+    }
+}
+
+
+function handleGameCompletion() {
+    isGameOver = true; // Set the game over flag
+    isRainFalling = false; // Stop raindrops
+    clearInterval(raindropIntervalId); // Clear the raindrop interval
+
+}
 
 
 // Initialize player's position
@@ -181,50 +325,54 @@ function resetPlayerPosition() {
 }
 
 function resetGame() {
-    playerLives = 3; // Reset player lives
-    updateHearts(); // Update heart icons
-    isGameOver = false;
-
+    // Reset all game-related variables and elements here
+    playerLives = 3;
+    updateHearts();
+    isGameStarted = false;
     revertDoggyLifeAbility();
-
-    // Reset player position
     resetPlayerPosition();
-
-    // Clear key states
+    resetWaveData();
     clearKeyStates();
-    // Reset player state to 'neutral'
     updatePlayerState('neutral');
-
-    currentHealth = maxHealth; // Reset current health to max health
-
-    // Reset the health bar width to its initial state
-    const healthPercentage = (currentHealth / maxHealth) * 100;
-    healthBar.style.width = `${healthPercentage}%`;
-
-    // Reset clickedAbilities object
     clickedAbilities = {
         freeze: false,
         sunny: false,
         umbrella: false,
         'doggy-life': false,
     };
-
-    // Clear the power boxes of all icons
     clearPowerBoxes();
-
-    // Reset any other game-specific variables and elements here
-    isGameStarted = true;
-    isRainFalling = true;
+    currentWave = 1;
+    isGameStarted = false;
+    isRainFalling = false;
     isDoggyLife = false;
     isInvincible = false;
-    hideGameOverScreen(); // Hide the game over screen
-    startGame(); // Start a new game
+    hideGameOverScreen();
+
+    // Clear any existing intervals
+    clearInterval(roundTimer);
+
+    // Reset the player's position and state
+    playerX = gameContainer.clientWidth / 2;
+    updatePlayerState('neutral');
+
+    // Reset the wave data and special items
+    wavesData = [];
+    specialItemsEnabled = false;
+
+    // Hide any visible elements like game over box
+    gameOverBox.style.display = 'none';
+
+    currentWave = 1; // Reset the current wave to 1
+    resetWaveData(); // Reset wave-specific data
+
+    clearInterval(raindropIntervalId); // Clear the raindrop interval
 }
 
+playAgainButton.addEventListener('click', () => {
+    location.reload(); // Refresh the page
+});
 
 
-// Event listener for the "Play Again" button
-playAgainButton.addEventListener('click', resetGame);
 
 function decreasePlayerLives() {
     // Check if the player is invincible before decreasing lives
@@ -252,60 +400,10 @@ function increasePlayerLives() {
     }
 }
 
-
-const healthBar = document.querySelector('.health-fill');
-const maxHealth = 100; // Adjust the maximum health as needed
-let currentHealth = maxHealth; // Initialize current health to max
-
-function decreaseHealth(amount) {
-    if (!isInvincible && !isDoggyLife) {
-        currentHealth -= amount;
-        if (currentHealth < 0) {
-            currentHealth = 0;
-        }
-    }
-    // Update the health bar width instantly
-    const healthPercentage = (currentHealth / maxHealth) * 100;
-    healthBar.style.width = `${healthPercentage}%`;
-}
-
-
-// Function to decrease health over time
-function decreaseHealthOverTime() {
-    const decreaseAmount = 1; // Adjust the amount to control the rate of decrease
-    
-    if (isGameStarted && currentHealth > 0) {
-        decreaseHealth(decreaseAmount);
-    } else if (currentHealth <= 0) {
-        // Player has no health left, you can handle game over logic here
-    }
-}
-
-
-// Call decreaseHealthOverTime at regular intervals to gradually decrease health
-setInterval(decreaseHealthOverTime, 1000); // Decrease health every 1 second (adjust the interval as needed)
-
 function handlePowerUpCollision(raindrop) {
     // Check if the game is over
     if (isGameOver) {
         return;
-    }
-
-    if (!raindrop.classList.contains('random-ability')) {
-        // Increase player lives by 50%
-        const increaseAmount = Math.ceil(currentHealth * 0.5);
-
-        // Update the health bar
-        currentHealth += increaseAmount;
-
-        // Ensure the currentHealth does not exceed the maxHealth
-        if (currentHealth > maxHealth) {
-            currentHealth = maxHealth;
-        }
-
-        // Update the health bar width
-        const healthPercentage = (currentHealth / maxHealth) * 100;
-        healthBar.style.width = `${healthPercentage}%`;
     }
 
     // Remove the raindrop
@@ -329,7 +427,7 @@ function executeFreezeAbility() {
     console.log('Freeze ability triggered');
     isRainFalling = false; // Stop raindrops from falling
     setTimeout(() => {
-        isRainFalling = true; // Resume raindrop falling after 3 seconds
+        startRain(); // Resume raindrop falling after 3 seconds
         console.log('Freeze ability ended');
     }, 3000);
 }
@@ -385,7 +483,10 @@ function handleRaindropCollision(raindrop) {
         }
     } else if (raindrop.classList.contains('heart')) {
         // Collided with a heart, increase player lives
-        updatePlayerState('happy');
+        updatePlayerState('love');
+        setTimeout(() => {
+            updatePlayerState('neutral');
+        }, 2000);
         increasePlayerLives();
         // Remove the heart raindrop
         raindrop.remove();
@@ -399,9 +500,11 @@ function handleRaindropCollision(raindrop) {
         revertDoggyLifeAbility();
     } else if (raindrop.classList.contains('trap-power')) {
         decreasePlayerLives();
-        currentHealth -= 20;
         raindrop.remove();
         updatePlayerState('angry');
+        setTimeout(() => {
+            updatePlayerState('neutral');
+        }, 2000);
         revertDoggyLifeAbility();
     } else if (raindrop.classList.contains('random-ability')) {
         updatePlayerState('happy');
@@ -446,7 +549,6 @@ function handleRaindropCollision(raindrop) {
         updatePlayerState('sad');
         // Decrease player lives
         decreasePlayerLives();
-        currentHealth -= 20;
         // Revert to neutral after 2 seconds
         revertDoggyLifeAbility();
         setTimeout(() => {
@@ -528,27 +630,62 @@ function movePlayer() {
 // Start the movement loop
 movePlayer();
 
-
 // Initial player position update
 updatePlayerPosition();
 
-let specialItemsEnabled = false; // Initialize to false
+// Function to update the current wave data based on the wave number
+function updateWaveData(waveNumber) {
+    waveData = wavesData.find(data => data.waveNumber === waveNumber);
+}
 
-// Initial player position update
-updatePlayerPosition();
+function resetWaveData() {
+    currentWave = 1; // Reset the current wave to 1
+
+    // Check if wavesData is populated and contains data for wave 1
+    if (wavesData && wavesData.length >= currentWave) {
+        waveData = wavesData[currentWave - 1]; // Get wave data for wave 1
+        raindropInterval = waveData.raindropInterval; // Set the raindrop interval for wave 1
+        
+    } else {
+        // Handle the case where wavesData is not yet loaded or doesn't contain data for wave 1
+        // You can set a default raindrop interval here if needed
+        raindropInterval = 500; // Default interval value
+    }
+}
+
+async function loadWaveData() {
+    try {
+        const response = await fetch('./assets/json/waves.json');
+        if (!response.ok) {
+            throw new Error('Failed to load wave data');
+        }
+        const data = await response.json();
+        wavesData = data;
+
+        console.log('Waves Data:', wavesData); // Add this line for debugging
+
+        // Ensure wavesData is populated before starting the game
+        startGameWithWave(1);
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 function createRaindrop() {
-    if (isRainFalling) {
+    if (isRainFalling && waveData) {
         const raindrop = document.createElement('div');
         raindrop.classList.add('raindrop');
         gameContainer.appendChild(raindrop);
 
-        // Randomly decide if it's a raindrop or a special item
-        const isPower = Math.random() < 0.1; // 10% chance for power.png
-        const isHealth = Math.random() < 0.0025; // 10% chance for power.png
-        const isAcidRain = Math.random() < 0.05; // 10% chance for power.png
-        const isRandomAbility = Math.random() < 0.05; // 10% chance for power.png
-        const isTrapPower = Math.random() < 0.02; // 10% chance for power.png
+        // Use the wave-specific raindrop interval
+        const raindropInterval = waveData.raindropInterval;
+
+        // Randomly decide if it's a raindrop or a special item based on wave data
+        const isPower = Math.random() < waveData.specialItemProbabilities.power;
+        const isHealth = Math.random() < waveData.specialItemProbabilities.health;
+        const isAcidRain = Math.random() < waveData.specialItemProbabilities.acidRain;
+        const isRandomAbility = Math.random() < waveData.specialItemProbabilities.randomAbility;
+        const isTrapPower = Math.random() < waveData.specialItemProbabilities.trapPower;
 
         if (specialItemsEnabled) {
             if (isPower) {
@@ -584,11 +721,3 @@ function createRaindrop() {
         }
     }
 }
-
-// Start regular raindrops falling for the first 5 seconds
-setTimeout(() => {
-    specialItemsEnabled = true; // Enable special items after 5 seconds
-}, 5000);
-
-// Call createRaindrop at regular intervals to simulate rainfall with the updated interval
-setInterval(createRaindrop, raindropInterval);

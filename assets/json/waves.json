@@ -1,0 +1,222 @@
+[
+  {
+    "waveNumber": 1,
+    "raindropInterval": 500,
+    "specialItemProbabilities": {
+      "power": 0.1,
+      "health": 0.0001,
+      "acidRain": 0,
+      "randomAbility": 0.02,
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 2,
+    "raindropInterval": 400,
+    "specialItemProbabilities": {
+      "power": 0.11,
+      "health": 0.0029,
+      "acidRain": 0,
+      "randomAbility": 0.03,
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 3,
+    "raindropInterval": 320, 
+    "specialItemProbabilities": {
+      "power": 0.12, 
+      "health": 0.0033,
+      "acidRain": 0.07,
+      "randomAbility": 0.04, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 4,
+    "raindropInterval": 250,
+    "specialItemProbabilities": {
+      "power": 0.13,
+      "health": 0.0037,
+      "acidRain": 0.08, 
+      "randomAbility": 0.05,
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 5,
+    "raindropInterval": 200, 
+    "specialItemProbabilities": {
+      "power": 0.14, 
+      "health": 0.0041, 
+      "acidRain": 0.09,
+      "randomAbility": 0.06, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 6,
+    "raindropInterval": 160, 
+    "specialItemProbabilities": {
+      "power": 0.15, 
+      "health": 0.0045, 
+      "acidRain": 0.1,
+      "randomAbility": 0.07, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 7,
+    "raindropInterval": 130, 
+    "specialItemProbabilities": {
+      "power": 0.16, 
+      "health": 0.0049, 
+      "acidRain": 0.11,
+      "randomAbility": 0.08, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 8,
+    "raindropInterval": 120, 
+    "specialItemProbabilities": {
+      "power": 0.17, 
+      "health": 0.0053, 
+      "acidRain": 0.12,
+      "randomAbility": 0.09, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 9,
+    "raindropInterval": 110, 
+    "specialItemProbabilities": {
+      "power": 0.18, 
+      "health": 0.0057, 
+      "acidRain": 0.13,
+      "randomAbility": 0.09, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 10,
+    "raindropInterval": 105, 
+    "specialItemProbabilities": {
+      "power": 0.19, 
+      "health": 0.0061, 
+      "acidRain": 0.14,
+      "randomAbility": 0.1, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 11,
+    "raindropInterval": 100, 
+    "specialItemProbabilities": {
+      "power": 0.2, 
+      "health": 0.0065, 
+      "acidRain": 0.15,
+      "randomAbility": 0.11, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 12,
+    "raindropInterval": 99, 
+    "specialItemProbabilities": {
+      "power": 0.21, 
+      "health": 0.0069, 
+      "acidRain": 0.16,
+      "randomAbility": 0.11, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 13,
+    "raindropInterval": 98, 
+    "specialItemProbabilities": {
+      "power": 0.22, 
+      "health": 0.0073, 
+      "acidRain": 0.17,
+      "randomAbility": 0.12, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 14,
+    "raindropInterval": 97, 
+    "specialItemProbabilities": {
+      "power": 0.23, 
+      "health": 0.0077, 
+      "acidRain": 0.18,
+      "randomAbility": 0.12, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 15,
+    "raindropInterval": 96, 
+    "specialItemProbabilities": {
+      "power": 0.24, 
+      "health": 0.0081, 
+      "acidRain": 0.19,
+      "randomAbility": 0.13, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 16,
+    "raindropInterval": 95, 
+    "specialItemProbabilities": {
+      "power": 0.25, 
+      "health": 0.0085, 
+      "acidRain": 0.2,
+      "randomAbility": 0.13, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 17,
+    "raindropInterval": 94, 
+    "specialItemProbabilities": {
+      "power": 0.26, 
+      "health": 0.0089, 
+      "acidRain": 0.21,
+      "randomAbility": 0.14, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 18,
+    "raindropInterval": 93, 
+    "specialItemProbabilities": {
+      "power": 0.27, 
+      "health": 0.0093, 
+      "acidRain": 0.22,
+      "randomAbility": 0.15, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 19,
+    "raindropInterval": 92, 
+    "specialItemProbabilities": {
+      "power": 0.28, 
+      "health": 0.0097, 
+      "acidRain": 0.23,
+      "randomAbility": 0.16, 
+      "trapPower": 0.05
+    }
+  },
+  {
+    "waveNumber": 20,
+    "raindropInterval": 90, 
+    "specialItemProbabilities": {
+      "power": 0.29, 
+      "health": 0.01, 
+      "acidRain": 0.24,
+      "randomAbility": 0.2, 
+      "trapPower": 0.05
+    }
+  }
+]
