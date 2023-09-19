@@ -178,7 +178,7 @@ function startRound() {
                 // All waves completed, handle game completion logic
                 handleGameCompletion();
             }
-        }, roundDuration + 5000); // Add 5000 milliseconds (5 seconds) to roundDuration
+        }, roundDuration + 20000); // Add 5000 milliseconds (20 seconds) to roundDuration
     } else {
         console.log("Invalid currentWave:", currentWave, "wavesData length:", wavesData.length);
     }
@@ -321,7 +321,7 @@ function hideGameOverScreen() {
 
 // Function to reset the player's position
 function resetPlayerPosition() {
-    playerX = gameContainer.clientWidth / 2; // Set the default starting position
+    playerX = gameContainer.clientWidth / 2 - 20; // Set the default starting position
 }
 
 function resetGame() {

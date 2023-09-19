@@ -80,7 +80,6 @@ body {
     left: 50%; /* Start at the center */
     transform: translateX(-50%); /* Center horizontally */
     border: none;
-    margin-left: 20px;
 }
 
 
